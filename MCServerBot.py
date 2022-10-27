@@ -1,5 +1,5 @@
 from discord.ext import commands
-# from serverstatus import ServerStatus
+from serverstatus import ServerStatus
 from server import Server
 from dotenv import load_dotenv
 load_dotenv()

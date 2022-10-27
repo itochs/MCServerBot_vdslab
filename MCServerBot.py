@@ -23,4 +23,5 @@ class MCServerBot(commands.Bot):
         print("=====")
         print("login")
         print("=====")
-        # await self.load_extension("MCOperation")
+        for cog in COGS:
+            await self.load_extension(cog)

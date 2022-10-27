@@ -5,9 +5,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-# COGs = [
-#     "MCOperation"
-# ]
+COGs = [
+    "MCOperation"
+]
 
 
 class MCServerBot(commands.Bot):
@@ -23,4 +23,5 @@ class MCServerBot(commands.Bot):
         print("=====")
         print("login")
         print("=====")
-        # await self.load_extension("MCOperation")
+        for cog in COGS:
+            await self.load_extension(cog)

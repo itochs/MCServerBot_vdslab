@@ -17,12 +17,11 @@ class ServerOperation(commands.Cog):
 
         await context.send("start")
         await self.changeStatus(ServerStatus.starting)
-        # self.bot.server_status = ServerStatus.starting
+
         for log in self.bot.server.start("../minecraft_server/server-v1.19/"):
             print(log)
 
         await self.changeStatus(ServerStatus.waiting)
-        # self.bot.server_status = ServerStatus.waiting
 
     @commands.command()
     async def stop(self, context):

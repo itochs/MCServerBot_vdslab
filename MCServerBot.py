@@ -5,9 +5,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-# COGs = [
-#     "MCOperation"
-# ]
+COGs = [
+    "MCOperation"
+]
 
 
 class MCServerBot(commands.Bot):

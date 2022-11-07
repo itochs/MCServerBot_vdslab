@@ -9,7 +9,11 @@ class Server:
         self.process = None
 
     def start(self, jar_dir_pass):
-        yield "Server starting up..."
+        yield "Check server file..."
+        jar_file = os.getenv("JAR_FILE_NAME")
+        if jar_file is None:
+            yield "error. jar file is not found"
+            return
 
         os.chdir(jar_dir_pass)
 

@@ -14,11 +14,15 @@ class ServerOperation(commands.Cog):
     async def start(self, context):
         if self.bot.server_status not in self.bot.allowed:
             return
+        # await context.send(context.channel.id)
+        channel = self.bot.get_channel(965978774963359817)
+        if context.channel is not channel:
+            return
 
         await context.send("start")
         await self.changeStatus(ServerStatus.starting)
 
-        for log in self.bot.server.start("../minecraft_server/server-v1.19/"):
+        for log in self.bot.server.start(self.bot.jar_directory_path):
             print(log)
 
         await self.changeStatus(ServerStatus.waiting)
@@ -26,6 +30,9 @@ class ServerOperation(commands.Cog):
     @commands.command()
     async def stop(self, context):
         if self.bot.server_status not in self.bot.allowed:
+            return
+        channel = self.bot.get_channel(965978774963359817)
+        if context.channel is not channel:
             return
 
         await context.send("stop")

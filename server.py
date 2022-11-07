@@ -15,7 +15,7 @@ class Server:
 
         yield "up .minecraft_server starting..."
         self.process = subprocess.Popen(
-            ["java", "-Xmx1024M", "-Xms1024M", "-jar", "server-v1.19.jar", "nogui"],
+            ["java", "-Xmx4G", "-Xms1G", "-jar", "server-v1.19.jar", "nogui"],
             text=True,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,

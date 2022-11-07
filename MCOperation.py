@@ -29,8 +29,10 @@ class ServerOperation(commands.Cog):
                 startable = False
 
         if startable:
+            await context.send("start!!!")
             await self.changeStatus(ServerStatus.waiting)
         else:
+            await context.send("failed starting... Sorry @851408507194572821")
             await self.changeStatus(ServerStatus.stop)
 
     @commands.command()
@@ -41,12 +43,13 @@ class ServerOperation(commands.Cog):
         if context.channel is not channel:
             return
 
-        await context.send("stop")
+        await context.send("stopping...")
         await self.changeStatus(ServerStatus.stopping)
         for log in self.bot.server.stop():
             print(log)
 
         await self.changeStatus(ServerStatus.stop)
+        await context.send("stop!!")
 
 
 def setup(bot):

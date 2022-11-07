@@ -9,6 +9,10 @@ class Server:
         self.process = None
 
     def start(self, jar_dir_pass):
+        if self.process is not None:
+            yield "already started"
+            return
+        
         yield "Check server file..."
         jar_file = os.getenv("JAR_FILE_NAME")
         if jar_file is None:
@@ -19,7 +23,7 @@ class Server:
 
         yield "up .minecraft_server starting..."
         self.process = subprocess.Popen(
-            ["java", "-Xmx4G", "-Xms1G", "-jar", "server-v1.19.jar", "nogui"],
+            ["java", "-Xmx4G", "-Xms1G", "-jar", jar_file, "nogui"],
             text=True,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
@@ -47,6 +51,7 @@ class Server:
         self.process.kill()
         for log in self.getProccessCommunicateOutErr():
             yield log
+        self.process = None
 
     def stop(self):
         if self.process is None:

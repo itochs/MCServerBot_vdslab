@@ -19,13 +19,19 @@ class ServerOperation(commands.Cog):
         if context.channel is not channel:
             return
 
-        await context.send("start")
+        await context.send("starting......")
         await self.changeStatus(ServerStatus.starting)
 
+        startable = True
         for log in self.bot.server.start(self.bot.jar_directory_path):
             print(log)
+            if "error" in log:
+                startable = False
 
-        await self.changeStatus(ServerStatus.waiting)
+        if startable:
+            await self.changeStatus(ServerStatus.waiting)
+        else:
+            await self.changeStatus(ServerStatus.stop)
 
     @commands.command()
     async def stop(self, context):

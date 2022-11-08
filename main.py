@@ -1,13 +1,15 @@
+#!/usr/bin/env python
 import os
 import discord
 from MCServerBot import MCServerBot
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 intents = discord.Intents.default()
 intents.message_content = True
+# intents.message = True
 jar_dir_path = os.getenv("JAR_DIR_PATH")
-bot_token = os.getenv("TEST_TOKEN")
+bot_token = os.getenv("BOT_TEST_TOKEN")
 
 if jar_dir_path is None:
     exit("jar directory path is none")

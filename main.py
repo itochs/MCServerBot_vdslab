@@ -7,7 +7,6 @@ from MCServerBot import MCServerBot
 
 intents = discord.Intents.default()
 intents.message_content = True
-# intents.message = True
 jar_dir_path = os.getenv("JAR_DIR_PATH")
 bot_token = os.getenv("BOT_TEST_TOKEN")
 

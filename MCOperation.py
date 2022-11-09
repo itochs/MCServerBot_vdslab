@@ -15,7 +15,7 @@ class ServerOperation(commands.Cog):
         if self.bot.server_status not in self.bot.allowed:
             return
         # await context.send(context.channel.id)
-        channel = self.bot.get_channel(965978774963359817)
+        channel = self.bot.get_channel(877587539991605290)
         if context.channel is not channel:
             return
 
@@ -39,7 +39,7 @@ class ServerOperation(commands.Cog):
     async def stop(self, context):
         if self.bot.server_status not in self.bot.allowed:
             return
-        channel = self.bot.get_channel(965978774963359817)
+        channel = self.bot.get_channel(877587539991605290)
         if context.channel is not channel:
             return
 

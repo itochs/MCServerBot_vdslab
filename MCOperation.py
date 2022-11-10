@@ -6,9 +6,15 @@ class ServerOperation(commands.Cog):
     def __init__(self, bot) -> None:
         super().__init__()
         self.bot = bot
-        # self.mc_channel_id = 877587539991605290
-        # test
-        self.mc_channel_id = 965978774963359817
+        if __debug__:
+            self.mc_channel_id = 965978774963359817
+            self.guild = self.bot.get_guld(965978774963359814)
+        else:
+            self.mc_channel_id = 877587539991605290
+            self.guild = self.bot.get_guild(730627809709391943)
+        
+        self.server_admin_roll = self.guild.get_role(806539400984920114)
+        self.server_admin_id = 851408507194572821
 
     async def changeStatus(self, ststus):
         self.bot.server_status = ststus

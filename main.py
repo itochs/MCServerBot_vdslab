@@ -2,8 +2,9 @@
 import os
 import discord
 from MCServerBot import MCServerBot
-# from dotenv import load_dotenv
-# load_dotenv()
+if __debug__:
+    from dotenv import load_dotenv
+    load_dotenv()
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -18,5 +19,7 @@ if bot_token is None:
 
 print(jar_dir_path)
 server_bot = MCServerBot(
-    command_prefix='!', intents=intents, jar_directory_path=jar_dir_path)
+    command_prefix='!',
+    intents=intents,
+    jar_directory_path=jar_dir_path)
 server_bot.run(bot_token)

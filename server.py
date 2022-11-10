@@ -65,6 +65,7 @@ class Server:
         yield "Server is stopping..."
         for log in self.getProccessCommunicateOutErr("stop", timeout=20):
             yield log
+        self.process = None
 
     def getHelp(self):
         print(self.process.stdin)

@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 import os
+
 import discord
+
 from MCServerBot import MCServerBot
+
 if __debug__:
     from dotenv import load_dotenv
     load_dotenv()
@@ -9,7 +12,10 @@ if __debug__:
 intents = discord.Intents.default()
 intents.message_content = True
 jar_dir_path = os.getenv("JAR_DIR_PATH")
-bot_token = os.getenv("BOT_TEST_TOKEN")
+bot_token = None
+if __debug__:
+    bot_token = os.getenv("BOT_TEST_TOKEN")
+# else:
 
 if jar_dir_path is None:
     exit("jar directory path is none")

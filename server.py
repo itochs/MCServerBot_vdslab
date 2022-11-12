@@ -68,7 +68,7 @@ class Server:
         self.process = None
 
     def getHelp(self):
-        print(self.process.stdin)
+        self.process.stdout.flush()
         self.process.stdin.write("help\n")
         self.process.stdin.flush()
 
@@ -84,6 +84,7 @@ class Server:
                 break
 
     def getJoinLog(self):
+        self.process.stdout.flush()
         self.process.stdin.write("list\n")
         self.process.stdin.flush()
         return self.process.stdout.readline().strip("\n")

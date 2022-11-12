@@ -1,10 +1,9 @@
-from discord import Member
-from discord import Guild
-from discord import Role
-from discord.ext import commands
-from discord.ext.commands import Bot
-from serverstatus import ServerStatus
+from discord import Guild, Member, Role
+from discord.ext import commands, tasks
+from discord.ext.commands import Bot, Context
+
 from MCServerBot import MCServerBot
+from serverstatus import ServerStatus
 
 
 class ServerOperation(commands.Cog):
@@ -14,11 +13,12 @@ class ServerOperation(commands.Cog):
         if __debug__:
             self.mc_channel_id : int = 965978774963359817
             self.guild : Guild = self.bot.get_guild(965978774963359814)
+            self.server_admin_roll : Role = self.guild.get_role(1040592221264683099)
+            # self.loopDebug.start()
         else:
             self.mc_channel_id : int = 877587539991605290
             self.guild : Guild  = self.bot.get_guild(730627809709391943)
-        
-        self.server_admin_roll : Role = self.guild.get_role(806539400984920114)
+            self.server_admin_roll : Role = self.guild.get_role(806539400984920114)
         self.server_admin_id : int = 851408507194572821
 
     async def changeStatus(self, ststus : ServerStatus):
@@ -66,7 +66,7 @@ class ServerOperation(commands.Cog):
         await context.send("stop!!")
     
     @commands.command()
-    async def debug(self, context):
+    async def debug(self, context : Context):
         if __debug__:
             user = context.message.author
             if(type(user) is not Member):
@@ -74,12 +74,26 @@ class ServerOperation(commands.Cog):
                 return
             user : Member
             user_role  = user.get_role(1040592221264683099)
-            user_has_admin_role = user_role and user_role is not self.guild.get_role(1040592221264683099)
-            if user_has_admin_role:
-                print("not admin")
+            user_has_admin_role = user_role and user_role is self.server_admin_roll
+            user_is_admin = user.id == self.server_admin_id
+            if not user_has_admin_role and not user_is_admin:
+                await context.send("you are not admin")
+                return
             
-            print("admin")
-
+            await context.send("you are admin!!")
+            if self.loopDebug.is_running():
+                await context.send("stop loop")
+                self.loopDebug.cancel()
+            else:
+                await context.send("start loop")
+                self.loopDebug.start()
+                
+    
+    @tasks.loop(seconds=10)
+    async def loopDebug(self):
+        if __debug__:
+            channel = self.bot.get_channel(self.mc_channel_id)
+            await channel.send("loop")
 
 def setup(bot):
     return bot.add_cog(ServerOperation(bot=bot))

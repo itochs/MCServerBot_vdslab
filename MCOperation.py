@@ -67,18 +67,18 @@ class ServerOperation(commands.Cog):
     
     @commands.command()
     async def debug(self, context):
-        # test
-        user = context.message.author
-        if(type(user) is not Member):
-            print(type(user))
-            return
-        user : Member
-        user_role  = user.get_role(1040592221264683099)
-        user_has_admin_role = user_role and user_role is not self.guild.get_role(1040592221264683099)
-        if user_has_admin_role:
-            print("not admin")
-        
-        print("admin")
+        if __debug__:
+            user = context.message.author
+            if(type(user) is not Member):
+                print(type(user))
+                return
+            user : Member
+            user_role  = user.get_role(1040592221264683099)
+            user_has_admin_role = user_role and user_role is not self.guild.get_role(1040592221264683099)
+            if user_has_admin_role:
+                print("not admin")
+            
+            print("admin")
 
 
 def setup(bot):

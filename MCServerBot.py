@@ -7,10 +7,10 @@ class MCServerBot(commands.Bot):
 
     def __init__(self, command_prefix, intents, jar_directory_path):
         super().__init__(command_prefix=command_prefix, intents=intents)
-        self.server = Server()
-        self.server_status = ServerStatus.stop
-        self.jar_directory_path = jar_directory_path
-        self.allowed = [ServerStatus.stop,
+        self.server : Server = Server()
+        self.server_status : ServerStatus = ServerStatus.stop
+        self.jar_directory_path : str= jar_directory_path
+        self.allowed : list = [ServerStatus.stop,
                         ServerStatus.playing,
                         ServerStatus.waiting]
         self.COGs = ["MCOperation"]

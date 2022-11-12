@@ -1,6 +1,7 @@
 from discord.ext import commands
-from serverstatus import ServerStatus
+
 from server import Server
+from serverstatus import ServerStatus
 
 
 class MCServerBot(commands.Bot):

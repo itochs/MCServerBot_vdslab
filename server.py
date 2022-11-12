@@ -1,7 +1,7 @@
+import asyncio
 import os
 import re
 import subprocess
-import asyncio
 
 
 class Server:

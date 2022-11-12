@@ -1,23 +1,28 @@
+from discord import Member
+from discord import Guild
+from discord import Role
 from discord.ext import commands
+from discord.ext.commands import Bot
 from serverstatus import ServerStatus
+from MCServerBot import MCServerBot
 
 
 class ServerOperation(commands.Cog):
-    def __init__(self, bot) -> None:
+    def __init__(self, bot : MCServerBot) -> None:
         super().__init__()
-        self.bot = bot
+        self.bot : MCServerBot = bot
         if __debug__:
-            self.mc_channel_id = 965978774963359817
-            self.guild = self.bot.get_guld(965978774963359814)
+            self.mc_channel_id : int = 965978774963359817
+            self.guild : Guild = self.bot.get_guild(965978774963359814)
         else:
-            self.mc_channel_id = 877587539991605290
-            self.guild = self.bot.get_guild(730627809709391943)
+            self.mc_channel_id : int = 877587539991605290
+            self.guild : Guild  = self.bot.get_guild(730627809709391943)
         
-        self.server_admin_roll = self.guild.get_role(806539400984920114)
-        self.server_admin_id = 851408507194572821
+        self.server_admin_roll : Role = self.guild.get_role(806539400984920114)
+        self.server_admin_id : int = 851408507194572821
 
-    async def changeStatus(self, ststus):
-        self.bot.server_status = ststus
+    async def changeStatus(self, ststus : ServerStatus):
+        self.bot.server_status : ServerStatus = ststus
 
     @commands.command()
     async def start(self, context):
@@ -59,6 +64,21 @@ class ServerOperation(commands.Cog):
 
         await self.changeStatus(ServerStatus.stop)
         await context.send("stop!!")
+    
+    @commands.command()
+    async def debug(self, context):
+        # test
+        user = context.message.author
+        if(type(user) is not Member):
+            print(type(user))
+            return
+        user : Member
+        user_role  = user.get_role(1040592221264683099)
+        user_has_admin_role = user_role and user_role is not self.guild.get_role(1040592221264683099)
+        if user_has_admin_role:
+            print("not admin")
+        
+        print("admin")
 
 
 def setup(bot):

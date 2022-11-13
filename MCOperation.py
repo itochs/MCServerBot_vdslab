@@ -45,7 +45,7 @@ class ServerOperation(commands.Cog):
                 startable = False
 
         if startable:
-            await context.send("start!!!")
+            await context.send("started!!!")
             await self.changeStatus(ServerStatus.waiting)
         else:
             await context.send("failed starting... Sorry @851408507194572821")
@@ -66,18 +66,20 @@ class ServerOperation(commands.Cog):
             print(log)
 
         await self.changeStatus(ServerStatus.stop)
-        await context.send("stop!!")
+        await context.send("stopped!!")
     
     @tasks.loop(minutes=30)
     async def periodicallyStop(self):
         joinNumber = self.bot.server.getJoinNumber()
         if self.stopable:
             if joinNumber == 0:
+                await self.mc_channel.send("periodically stop")
                 self.stop()
 
             self.stopable = False
         else:
             if joinNumber == 0:
+                await self.mc_channel.send("stop after 30 minutes")
                 self.stopable = True
     
 def setup(bot):

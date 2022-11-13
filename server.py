@@ -82,7 +82,10 @@ class Server:
             if "whitelist" in line:
                 break
 
-    def getJoinLog(self) -> str:
+    def getJoinLog(self) -> str | None:
+        if self.process is None:
+            return None
+        
         self.process.stdout.flush()
         self.process.stdin.write("list\n")
         self.process.stdin.flush()
@@ -90,6 +93,8 @@ class Server:
 
     def getJoinNumber(self) -> int :
         join_log = self.getJoinLog()
+        if join_log is None:
+            return
         # 2番目にログイン人数が入る
         pattern = "(\[.*\]\s\[.*\]:\D*)(\d*)(.*)"
         join_number : int = re.match(pattern, join_log).group(2)

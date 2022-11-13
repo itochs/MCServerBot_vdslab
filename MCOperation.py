@@ -52,7 +52,6 @@ class ServerOperation(commands.Cog):
             await context.send("started!!!")
             await self.__changeStatus(ServerStatus.waiting)
             await self.mc_channel.send("stop after 30 minutes if no one is logged in")
-            self.stopable = True
             self.periodicallyStop.start()
         else:
             await context.send("failed starting... Sorry @851408507194572821")

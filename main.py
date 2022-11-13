@@ -12,7 +12,7 @@ if __debug__:
 intents = discord.Intents.default()
 intents.message_content = True
 jar_dir_path = os.getenv("JAR_DIR_PATH")
-bot_token = os.getenv("BOT_TOken")
+bot_token = os.getenv("BOT_TOKEN")
 if __debug__:
     bot_token = os.getenv("BOT_TEST_TOKEN")
     

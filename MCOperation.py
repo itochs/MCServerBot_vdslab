@@ -25,7 +25,7 @@ class ServerOperation(commands.Cog):
             self.server_admin_roll : Role = self.guild.get_role(1040592221264683099)
             
 
-    async def changeStatus(self, ststus : ServerStatus):
+    async def __changeStatus(self, ststus : ServerStatus):
         self.bot.server_status : ServerStatus = ststus
 
     @commands.command()
@@ -36,7 +36,7 @@ class ServerOperation(commands.Cog):
             return
 
         await context.send("starting......")
-        await self.changeStatus(ServerStatus.starting)
+        await self.__changeStatus(ServerStatus.starting)
 
         startable = True
         for log in self.bot.server.start(self.bot.jar_directory_path):
@@ -46,11 +46,14 @@ class ServerOperation(commands.Cog):
 
         if startable:
             await context.send("started!!!")
-            await self.changeStatus(ServerStatus.waiting)
+            await self.__changeStatus(ServerStatus.waiting)
         else:
             await context.send("failed starting... Sorry @851408507194572821")
-            await self.changeStatus(ServerStatus.stop)
+            await self.__changeStatus(ServerStatus.stop)
 
+    async def __stopProcess():
+        pass
+    
     @commands.command()
     async def stop(self, context : Context):
         if self.bot.server_status not in self.bot.allowed:
@@ -61,11 +64,11 @@ class ServerOperation(commands.Cog):
             return
 
         await context.send("stopping...")
-        await self.changeStatus(ServerStatus.stopping)
+        await self.__changeStatus(ServerStatus.stopping)
         for log in self.bot.server.stop():
             print(log)
 
-        await self.changeStatus(ServerStatus.stop)
+        await self.__changeStatus(ServerStatus.stop)
         await context.send("stopped!!")
     
     @tasks.loop(minutes=30)
@@ -74,7 +77,7 @@ class ServerOperation(commands.Cog):
         if self.stopable:
             if joinNumber == 0:
                 await self.mc_channel.send("periodically stop")
-                self.stop()
+                # self.stop()
 
             self.stopable = False
         else:

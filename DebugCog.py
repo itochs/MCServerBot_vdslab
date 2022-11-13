@@ -5,6 +5,7 @@ from discord.ext.commands import Bot, Context
 from MCServerBot import MCServerBot
 from serverstatus import ServerStatus
 
+import random
 
 class Debug(commands.Cog):
     def __init__(self, bot : MCServerBot) -> None:
@@ -14,36 +15,56 @@ class Debug(commands.Cog):
         self.mc_channel = self.bot.get_channel(965978774963359817)
         self.guild : Guild = self.bot.get_guild(965978774963359814)
         self.server_admin_roll : Role = self.guild.get_role(1040592221264683099)
+        
+        self.stopable = False
     
     
     @commands.command()
     async def debug(self, context : Context):
-        if __debug__:
-            user = context.message.author
-            if(type(user) is not Member):
-                print(type(user))
-                return
-            user : Member
-            user_role  = user.get_role(1040592221264683099)
-            user_has_admin_role = user_role and user_role is self.server_admin_roll
-            user_is_admin = user.id == self.server_admin_id
-            if not user_has_admin_role and not user_is_admin:
-                await context.send("you are not admin")
-                return
-            
-            await context.send("you are admin!!")
-            if self.loopDebug.is_running():
-                await context.send("stop loop @851408507194572821")
-                self.loopDebug.cancel()
+        user = context.message.author
+        if(type(user) is not Member):
+            print(type(user))
+            return
+        user : Member
+        user_role  = user.get_role(1040592221264683099)
+        user_has_admin_role = user_role and user_role is self.server_admin_roll
+        user_is_admin = user.id == self.server_admin_id
+        if not user_has_admin_role and not user_is_admin:
+            await context.send("you are not admin")
+            return
+        
+        await context.send("you are admin!!")
+        if self.loopDebug.is_running():
+            await context.send("stop loop @851408507194572821")
+            self.loopDebug.cancel()
+        else:
+            await context.send("start loop")
+            if(0):
+                await context.send("0 is True")
             else:
-                await context.send("start loop @851408507194572821")
-                self.loopDebug.start()
+                await context.send("0 is False")
+            self.loopDebug.start()
                 
+    async def demoStop(self, channel : TextChannel):
+        await channel.send("demo stop")
+        
+    def demoJoinNumber(self):
+        return random.randint(0,5)
     
-    @tasks.loop(seconds=10)
+    @tasks.loop(seconds=3)
     async def loopDebug(self):
-        if __debug__:
-            await self.mc_channel.send("loop")
+        joinNumber = self.demoJoinNumber()
+        await self.mc_channel.send(f"loop: n -> {joinNumber}, stopable {self.stopable}")
+        if self.stopable:
+            if joinNumber == 0:
+                await self.mc_channel.send("demo stop")
+                await self.demoStop()
+
+            self.stopable = False
+        else:
+            if joinNumber == 0:
+                await self.mc_channel.send("demo stop after 30 minutes if no one is logged in")
+                self.stopable = True
 
 def setup(bot):
     return bot.add_cog(Debug(bot=bot))

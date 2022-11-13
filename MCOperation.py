@@ -51,6 +51,8 @@ class ServerOperation(commands.Cog):
         if startable:
             await context.send("started!!!")
             await self.__changeStatus(ServerStatus.waiting)
+            await self.mc_channel.send("stop after 30 minutes if no one is logged in")
+            self.stopable = True
             self.periodicallyStop.start()
         else:
             await context.send("failed starting... Sorry @851408507194572821")
@@ -68,10 +70,10 @@ class ServerOperation(commands.Cog):
     @commands.command()
     async def stop(self, context : Context):
         if self.bot.server_status not in self.bot.allowed:
+            print(f"status {self.bot.server_status} is not allowed")
             return
         if context.channel is not self.mc_channel:
-            return
-        if not self.stopable:
+            print(f"channel is not mc channel")
             return
         
         user = context.message.author
@@ -91,18 +93,19 @@ class ServerOperation(commands.Cog):
     
     @tasks.loop(minutes=30)
     async def periodicallyStop(self):
-        joinNumber = self.bot.server.getJoinNumber()
         if self.stopable:
-            if joinNumber == 0:
-                await self.mc_channel.send("periodically stop")
-                await self.__stopProcess()
-                self.periodicallyStop.cancel()
-
-            self.stopable = False
+            await self.mc_channel.send("periodically stop")
+            await self.__stopProcess()
+            self.periodicallyStop.cancel()
+        
+        if 0 == self.bot.server.getJoinNumber():
+            self.stopable = True
         else:
-            if joinNumber == 0:
-                await self.mc_channel.send("stop after 30 minutes if no one is logged in")
-                self.stopable = True
+            self.stopable = False
+    
+    @periodicallyStop.before_loop
+    async def before_periodicallyStop(self):
+        await self.bot.wait_until_ready()
     
 def setup(bot):
     return bot.add_cog(ServerOperation(bot=bot))

@@ -18,7 +18,13 @@ class Debug(commands.Cog):
         self.stopable = False
         self.demoProcess = None
     
-    
+    @commands.command()
+    async def logDebug(self, context : Context):
+        if self.bot.server.process is None:
+            return
+        print(self.bot.server.getJoinLog())
+        print(self.bot.server.getJoinNumber())
+
     @commands.command()
     async def debug(self, context : Context):
         user = context.message.author

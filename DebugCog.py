@@ -17,6 +17,7 @@ class Debug(commands.Cog):
         self.server_admin_roll : Role = self.guild.get_role(1040592221264683099)
         
         self.stopable = False
+        self.demoProcess = None
     
     
     @commands.command()
@@ -39,28 +40,30 @@ class Debug(commands.Cog):
             self.loopDebug.cancel()
         else:
             await context.send("start loop")
+            self.demoProcess = "demo"
             if(0):
                 await context.send("0 is True")
             else:
                 await context.send("0 is False")
             self.loopDebug.start()
                 
-    async def demoStop(self, channel : TextChannel):
-        await channel.send("demo stop")
+    async def demoStop(self):
+        await self.mc_channel.send("demo stop")
+        self.demoProcess = None
         
     def demoJoinNumber(self):
-        return random.randint(0,5)
+        return random.randint(0,2)
     
     @tasks.loop(seconds=3)
     async def loopDebug(self):
         joinNumber = self.demoJoinNumber()
         await self.mc_channel.send(f"loop: n -> {joinNumber}, stopable {self.stopable}")
         if self.stopable:
+            self.stopable = False
             if joinNumber == 0:
                 await self.mc_channel.send("demo stop")
                 await self.demoStop()
-
-            self.stopable = False
+                self.loopDebug.cancel()
         else:
             if joinNumber == 0:
                 await self.mc_channel.send("demo stop after 30 minutes if no one is logged in")

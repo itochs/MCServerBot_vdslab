@@ -51,8 +51,14 @@ class ServerOperation(commands.Cog):
             await context.send("failed starting... Sorry @851408507194572821")
             await self.__changeStatus(ServerStatus.stop)
 
-    async def __stopProcess():
-        pass
+    async def __stopProcess(self, channel : TextChannel):
+        await channel.send("stopping...")
+        await self.__changeStatus(ServerStatus.stopping)
+        for log in self.bot.server.stop():
+            print(log)
+
+        await self.__changeStatus(ServerStatus.stop)
+        await channel.send("stopped!!")
     
     @commands.command()
     async def stop(self, context : Context):
@@ -63,13 +69,7 @@ class ServerOperation(commands.Cog):
         if not self.stopable:
             return
 
-        await context.send("stopping...")
-        await self.__changeStatus(ServerStatus.stopping)
-        for log in self.bot.server.stop():
-            print(log)
-
-        await self.__changeStatus(ServerStatus.stop)
-        await context.send("stopped!!")
+        await self.__stopProcess()
     
     @tasks.loop(minutes=30)
     async def periodicallyStop(self):
@@ -77,7 +77,7 @@ class ServerOperation(commands.Cog):
         if self.stopable:
             if joinNumber == 0:
                 await self.mc_channel.send("periodically stop")
-                # self.stop()
+                await self.__stopProcess()
 
             self.stopable = False
         else:

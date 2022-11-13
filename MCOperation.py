@@ -79,7 +79,7 @@ class ServerOperation(commands.Cog):
             self.stopable = False
         else:
             if joinNumber == 0:
-                await self.mc_channel.send("stop after 30 minutes")
+                await self.mc_channel.send("stop after 30 minutes if no one is logged in")
                 self.stopable = True
     
 def setup(bot):

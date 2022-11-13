@@ -28,12 +28,10 @@ class ServerOperation(commands.Cog):
         self.bot.server_status : ServerStatus = ststus
 
     @commands.command()
-    async def start(self, context):
+    async def start(self, context : Context):
         if self.bot.server_status not in self.bot.allowed:
             return
-        # await context.send(context.channel.id)
-        channel = self.bot.get_channel(self.mc_channel_id)
-        if context.channel is not channel:
+        if context.channel is not self.mc_channel:
             return
 
         await context.send("starting......")

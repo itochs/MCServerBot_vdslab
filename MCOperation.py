@@ -15,14 +15,16 @@ class ServerOperation(commands.Cog):
 
         # vdslab
         self.mc_channel = self.bot.get_channel(877587539991605290)
-        self.guild : Guild  = self.bot.get_guild(730627809709391943)
-        self.server_admin_roll : Role = self.guild.get_role(806539400984920114)
+        self.guild = self.bot.get_guild(730627809709391943)
+        if self.guild:
+            self.server_admin_roll = self.guild.get_role(806539400984920114)
         
         # private channel
         if __debug__:
             self.mc_channel = self.bot.get_channel(965978774963359817)
-            self.guild : Guild = self.bot.get_guild(965978774963359814)
-            self.server_admin_roll : Role = self.guild.get_role(1040592221264683099)
+            self.guild = self.bot.get_guild(965978774963359814)
+            if self.guild:
+                self.server_admin_roll = self.guild.get_role(1040592221264683099)
             
 
     async def __changeStatus(self, ststus : ServerStatus):

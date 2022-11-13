@@ -64,6 +64,10 @@ class ServerOperation(commands.Cog):
 
         await self.changeStatus(ServerStatus.stop)
         await context.send("stop!!")
+    
+    @tasks.loop()
+    async def checkJoinNumber():
+        pass
 
 
 def setup(bot):

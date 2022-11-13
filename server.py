@@ -83,17 +83,17 @@ class Server:
             if "whitelist" in line:
                 break
 
-    def getJoinLog(self):
+    def getJoinLog(self) -> str:
         self.process.stdout.flush()
         self.process.stdin.write("list\n")
         self.process.stdin.flush()
         return self.process.stdout.readline().strip("\n")
 
-    def getJoinNumber(self):
+    def getJoinNumber(self) -> int :
         join_log = self.getJoinLog()
         # 2番目にログイン人数が入る
         pattern = "(\[.*\]\s\[.*\]:\D*)(\d*)(.*)"
-        join_number = re.match(pattern, join_log).group(2)
+        join_number : int = re.match(pattern, join_log).group(2)
         return join_number
 
     def getProccessCommunicateOutErr(self, byte_input="", timeout=0):

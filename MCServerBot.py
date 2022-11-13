@@ -15,6 +15,8 @@ class MCServerBot(commands.Bot):
                         ServerStatus.playing,
                         ServerStatus.waiting]
         self.COGs = ["MCOperation"]
+        if __debug__:
+            self.COGs = ["MCOperation", "DebugCog"]
 
     async def on_ready(self):
         print("=====")

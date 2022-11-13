@@ -66,36 +66,7 @@ class ServerOperation(commands.Cog):
 
         await self.changeStatus(ServerStatus.stop)
         await context.send("stop!!")
-    
-    
-    @commands.command()
-    async def debug(self, context : Context):
-        if __debug__:
-            user = context.message.author
-            if(type(user) is not Member):
-                print(type(user))
-                return
-            user : Member
-            user_role  = user.get_role(1040592221264683099)
-            user_has_admin_role = user_role and user_role is self.server_admin_roll
-            user_is_admin = user.id == self.server_admin_id
-            if not user_has_admin_role and not user_is_admin:
-                await context.send("you are not admin")
-                return
-            
-            await context.send("you are admin!!")
-            if self.loopDebug.is_running():
-                await context.send("stop loop")
-                self.loopDebug.cancel()
-            else:
-                await context.send("start loop")
-                self.loopDebug.start()
-                
-    
-    @tasks.loop(seconds=10)
-    async def loopDebug(self):
-        if __debug__:
-            await self.mc_channel.send("loop")
+
 
 def setup(bot):
     return bot.add_cog(ServerOperation(bot=bot))

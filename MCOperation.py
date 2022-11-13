@@ -51,14 +51,14 @@ class ServerOperation(commands.Cog):
             await context.send("failed starting... Sorry @851408507194572821")
             await self.__changeStatus(ServerStatus.stop)
 
-    async def __stopProcess(self, channel : TextChannel):
-        await channel.send("stopping...")
+    async def __stopProcess(self):
+        await self.mc_channel.send("stopping...")
         await self.__changeStatus(ServerStatus.stopping)
         for log in self.bot.server.stop():
             print(log)
 
         await self.__changeStatus(ServerStatus.stop)
-        await channel.send("stopped!!")
+        await self.mc_channel.send("stopped!!")
     
     @commands.command()
     async def stop(self, context : Context):

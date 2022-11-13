@@ -1,6 +1,6 @@
-from discord import Guild, Member, Role, TextChannel
+from discord import Member
 from discord.ext import commands, tasks
-from discord.ext.commands import Bot, Context
+from discord.ext.commands import Context
 
 from MCServerBot import MCServerBot
 from serverstatus import ServerStatus

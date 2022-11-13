@@ -51,6 +51,7 @@ class ServerOperation(commands.Cog):
         if startable:
             await context.send("started!!!")
             await self.__changeStatus(ServerStatus.waiting)
+            self.periodicallyStop.start()
         else:
             await context.send("failed starting... Sorry @851408507194572821")
             await self.__changeStatus(ServerStatus.stop)

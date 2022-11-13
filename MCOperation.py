@@ -11,6 +11,7 @@ class ServerOperation(commands.Cog):
         super().__init__()
         self.bot : MCServerBot = bot
         self.server_admin_id : int = 851408507194572821
+        self.stopable = False
 
         # vdslab
         self.mc_channel = self.bot.get_channel(877587539991605290)
@@ -56,6 +57,8 @@ class ServerOperation(commands.Cog):
             return
         if context.channel is not self.mc_channel:
             return
+        if not self.stopable:
+            return
 
         await context.send("stopping...")
         await self.changeStatus(ServerStatus.stopping)
@@ -65,10 +68,17 @@ class ServerOperation(commands.Cog):
         await self.changeStatus(ServerStatus.stop)
         await context.send("stop!!")
     
-    @tasks.loop()
-    async def checkJoinNumber():
-        pass
+    @tasks.loop(minutes=30)
+    async def periodicallyStop(self):
+        joinNumber = self.bot.server.getJoinNumber()
+        if self.stopable:
+            if joinNumber == 0:
+                self.stop()
 
-
+            self.stopable = False
+        else:
+            if joinNumber == 0:
+                self.stopable = True
+    
 def setup(bot):
     return bot.add_cog(ServerOperation(bot=bot))

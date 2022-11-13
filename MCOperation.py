@@ -16,15 +16,17 @@ class ServerOperation(commands.Cog):
         # vdslab
         self.mc_channel = self.bot.get_channel(877587539991605290)
         self.guild = self.bot.get_guild(730627809709391943)
+        self.server_admin_roll_id = 806539400984920114
         if self.guild:
-            self.server_admin_roll = self.guild.get_role(806539400984920114)
+            self.server_admin_roll = self.guild.get_role(self.server_admin_roll_id)
         
         # private channel
         if __debug__:
             self.mc_channel = self.bot.get_channel(965978774963359817)
             self.guild = self.bot.get_guild(965978774963359814)
+            self.server_admin_roll_id = 1040592221264683099
             if self.guild:
-                self.server_admin_roll = self.guild.get_role(1040592221264683099)
+                self.server_admin_roll = self.guild.get_role(self.server_admin_roll_id)
             
 
     async def __changeStatus(self, ststus : ServerStatus):
@@ -70,6 +72,19 @@ class ServerOperation(commands.Cog):
             return
         if not self.stopable:
             return
+        
+        user = context.message.author
+        if(type(user) is not Member):
+            await context.send("User could not verify. sorry :(")
+            return
+        
+        user_role  = user.get_role(self.server_admin_roll_id)
+        user_has_admin_role = user_role and user_role is self.server_admin_roll
+        user_is_admin = user.id == self.server_admin_id
+        
+        if not user_has_admin_role and not user_is_admin:
+            await context.send("You are not admin? Only admin can stop")
+            return
 
         await self.__stopProcess()
     
@@ -80,6 +95,7 @@ class ServerOperation(commands.Cog):
             if joinNumber == 0:
                 await self.mc_channel.send("periodically stop")
                 await self.__stopProcess()
+                self.periodicallyStop.cancel()
 
             self.stopable = False
         else:

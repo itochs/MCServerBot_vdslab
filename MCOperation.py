@@ -88,6 +88,9 @@ class ServerOperation(commands.Cog):
             await context.send("You are not admin? Only admin can stop")
             return
 
+        if self.periodicallyStop.is_running:
+            self.periodicallyStop.cancel()
+            
         await self.__stopProcess()
     
     @tasks.loop(minutes=30)

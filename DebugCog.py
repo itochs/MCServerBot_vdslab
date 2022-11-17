@@ -64,7 +64,9 @@ class Debug(commands.Cog):
     @tasks.loop(seconds=5)
     async def periodicallyStop(self):
         print(self.stopable)
-        if self.checkAnyoneJoined():
+        rand = self.demoJoinNumber()
+        print(rand)
+        if rand:
             # debug
             if self.stopable:
                 await self.mc_channel.send("while loop anyone login")
@@ -82,8 +84,8 @@ class Debug(commands.Cog):
             return
         
         self.stopable = True
-        await self.mc_channel.send("next loop will stop")        
-        
+        await self.mc_channel.send("next loop will stop")  
+
     @periodicallyStop.before_loop
     async def before_periodicallyStop(self):
         await self.bot.wait_until_ready()

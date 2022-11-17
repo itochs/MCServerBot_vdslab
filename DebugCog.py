@@ -17,6 +17,7 @@ class Debug(commands.Cog):
         
         self.stopable = False
         self.demoProcess = None
+        self.nlogin = 0
     
     @commands.command()
     async def logDebug(self, context : Context):
@@ -31,26 +32,19 @@ class Debug(commands.Cog):
         if(type(user) is not Member):
             print(type(user))
             return
-        user : Member
-        user_role  = user.get_role(1040592221264683099)
-        user_has_admin_role = user_role and user_role is self.server_admin_roll
-        user_is_admin = user.id == self.server_admin_id
-        if not user_has_admin_role and not user_is_admin:
-            await context.send("you are not admin")
-            return
         
         await context.send("you are admin!!")
-        if self.loopDebug.is_running():
-            await context.send("stop loop @851408507194572821")
-            self.loopDebug.cancel()
+        if self.periodicallyStop.is_running():
+            await context.send("stop loop @851408507194572821", mention_author=True)
+            self.periodicallyStop.cancel()
         else:
             await context.send("start loop")
-            self.demoProcess = "demo"
+            await self.mc_channel.send("stop after 30 minutes if no one is logged in")
+            self.periodicallyStop.start()
             if(0):
                 await context.send("0 is True")
             else:
                 await context.send("0 is False")
-            self.loopDebug.start()
                 
     async def demoStop(self):
         await self.mc_channel.send("demo stop")
@@ -58,21 +52,41 @@ class Debug(commands.Cog):
         
     def demoJoinNumber(self):
         return random.randint(0,2)
+
+    def checkAnyoneJoined(self) -> bool:
+        rand = self.demoJoinNumber()
+        print(rand)
+        if 0 == rand:
+            return False
+        
+        return True
     
-    @tasks.loop(seconds=3)
-    async def loopDebug(self):
-        joinNumber = self.demoJoinNumber()
-        await self.mc_channel.send(f"loop: n -> {joinNumber}, stopable {self.stopable}")
-        if self.stopable:
+    @tasks.loop(seconds=5)
+    async def periodicallyStop(self):
+        print(self.stopable)
+        if self.checkAnyoneJoined():
+            # debug
+            if self.stopable:
+                await self.mc_channel.send("while loop anyone login")
+            else:
+                await self.mc_channel.send("playing")
+                
             self.stopable = False
-            if joinNumber == 0:
-                await self.mc_channel.send("demo stop")
-                await self.demoStop()
-                self.loopDebug.cancel()
-        else:
-            if joinNumber == 0:
-                await self.mc_channel.send("demo stop after 30 minutes if no one is logged in")
-                self.stopable = True
+            return
+        
+        if self.stopable:
+            await self.mc_channel.send("periodically stop")
+            await self.demoStop()
+            self.stopable = False
+            self.periodicallyStop.cancel()
+            return
+        
+        self.stopable = True
+        await self.mc_channel.send("next loop will stop")        
+        
+    @periodicallyStop.before_loop
+    async def before_periodicallyStop(self):
+        await self.bot.wait_until_ready()
 
 def setup(bot):
     return bot.add_cog(Debug(bot=bot))

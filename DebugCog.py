@@ -1,4 +1,4 @@
-from discord import Guild, Member, Role
+from discord import Guild, Member, Role, AllowedMentions
 from discord.ext import commands, tasks
 from discord.ext.commands import Context
 
@@ -33,18 +33,19 @@ class Debug(commands.Cog):
             print(type(user))
             return
         
-        await context.send("you are admin!!")
-        if self.periodicallyStop.is_running():
-            await context.send("stop loop @851408507194572821", mention_author=True)
-            self.periodicallyStop.cancel()
-        else:
-            await context.send("start loop")
-            await self.mc_channel.send("stop after 30 minutes if no one is logged in")
-            self.periodicallyStop.start()
-            if(0):
-                await context.send("0 is True")
-            else:
-                await context.send("0 is False")
+        await context.send(f"var id : hi ", allowed_mentions=AllowedMentions(users=True), reference=context.message)
+        await context.send(f"var id : hi {user.mention}", allowed_mentions=AllowedMentions(users=True))
+        # if self.periodicallyStop.is_running():
+        #     await context.send("stop loop ")
+        #     self.periodicallyStop.cancel()
+        # else:
+        #     await context.send("start loop")
+        #     await self.mc_channel.send("stop after 30 minutes if no one is logged in")
+        #     self.periodicallyStop.start()
+        #     if(0):
+        #         await context.send("0 is True")
+        #     else:
+        #         await context.send("0 is False")
                 
     async def demoStop(self):
         await self.mc_channel.send("demo stop")
@@ -77,7 +78,7 @@ class Debug(commands.Cog):
             return
         
         if self.stopable:
-            await self.mc_channel.send("periodically stop")
+            await self.mc_channel.send("periodically stop @851408507194572821", allowed_mentions=True)
             await self.demoStop()
             self.stopable = False
             self.periodicallyStop.cancel()
